@@ -10,7 +10,6 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject private var lupinTitleViewModel = LupinTitleViewModel()
-    @State private var inputString:String = ""
     
     var body: some View {
         Group {
@@ -31,16 +30,14 @@ struct ContentView: View {
                         
                         Text("音楽：魔王魂")
                             .foregroundColor(.white)
-                            .frame(alignment: .bottom)
                     }
                 }
             } else {
                 VStack {
-                    TextField("Title", text: $inputString)
+                    TextField("Title", text: $lupinTitleViewModel.title)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
                     Button(action: {
-                        self.lupinTitleViewModel.title = self.inputString
                         self.lupinTitleViewModel.startTitleCall()
                     }) {
                         Text("Start")

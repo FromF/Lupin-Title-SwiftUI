@@ -11,7 +11,7 @@ import UIKit
 import AVFoundation
 
 class LupinTitleViewModel: NSObject, ObservableObject {
-    @Published var title:String?
+    @Published var title:String = ""
     @Published var typeWrite:String = ""
     @Published var isTyping:Bool = false
     
@@ -21,7 +21,9 @@ class LupinTitleViewModel: NSObject, ObservableObject {
     private let typewriter = try! AVAudioPlayer(data: NSDataAsset(name: "se_maoudamashii_se_ignition04")!.data)
     
     func startTitleCall() {
-        guard let title = self.title else { return }
+        if title.count == 0 {
+            return
+        }
         
         titleSound.prepareToPlay()
         typewriter.prepareToPlay()
@@ -31,9 +33,10 @@ class LupinTitleViewModel: NSObject, ObservableObject {
                 self.isTyping = true
             }
             
-            for string in title {
+            for string in self.title {
                 Thread.sleep(forTimeInterval: 0.15)
                 self.titleSound.stop()
+                self.titleSound.currentTime = 0.0
                 self.titleSound.play()
                 DispatchQueue.main.sync {
                     self.typeWrite = String(string)
@@ -43,7 +46,7 @@ class LupinTitleViewModel: NSObject, ObservableObject {
             self.titleSound.stop()
             self.typewriter.play()
             DispatchQueue.main.sync {
-                self.typeWrite = title
+                self.typeWrite = self.title
             }
             Thread.sleep(forTimeInterval: 2)
             DispatchQueue.main.sync {
